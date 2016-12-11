@@ -61,7 +61,7 @@ func walk( steps: [(String,Int)] ) -> (Coordinate, Coordinate?) {
     return ( pos, firstTwice )
 }
 
-func main() throws {
+func main() {
     do {
         guard CommandLine.argc == 2 else {
             print( "Specify the input file on the command line." )
@@ -84,5 +84,5 @@ func main() throws {
     }
 }
 
-try main()
+main()
 
