@@ -19,11 +19,12 @@ public func readStringFromFile(path: String) throws -> String {
     defer { fclose(fp) }
     var outputString = ""
     let chunkSize = 1024
-    let buffer: UnsafeMutablePointer<CChar> = UnsafeMutablePointer.allocate(capacity: chunkSize)
-    defer { buffer.deallocate( capacity: chunkSize) }
+    let buffer: UnsafeMutablePointer<CChar> = UnsafeMutablePointer.allocate(capacity: chunkSize + 1)
+    defer { buffer.deallocate( capacity: chunkSize + 1) }
     repeat {
         let count: Int = fread(buffer, 1, chunkSize, fp)
         guard ferror(fp) == 0 else { break }
+        buffer[count] = 0
         if count > 0 {
             let ptr = unsafeBitCast(buffer, to: UnsafePointer<CChar>.self)
             if let newString = String(validatingUTF8: ptr) {
