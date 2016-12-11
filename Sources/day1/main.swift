@@ -11,43 +11,53 @@ func parse( problem : String ) -> [(String,Int)] {
     return out                      
 }
 
-func walk( steps: [(String,Int)] ) -> ( Int, Int ) {
-    var orientation = 1
-    var xPos = 0, yPos = 0
-    var visited = Set<(Int,Int)>( [ (xPos, yPos) ] )
+func walk( steps: [(String,Int)] ) -> (Coordinate, Coordinate?) {
+    var orientation = 0
+    var pos = Coordinate( x:0, y:0 )
+    var visited = Set<Coordinate>( [pos] )
+    var firstTwice : Coordinate? = nil
+    
     for ( dir, len ) in steps {
-        print( "X \(xPos) Y \(yPos) \(orientation) \(dir)\(len)" )
+        print( "X \(pos.x) Y \(pos.y) \(orientation) \(dir)\(len)" )
         switch dir {
         case "L":
             orientation -= 1
-            if orientation < 1 {
+            if orientation < 0 {
                 orientation += 4
             }
         case "R":
-            orientation += 1
-            if orientation > 4 {
-                orientation -= 4
-            }
+            orientation = ( orientation + 1 ) % 4
         default:
             print( "Unknown direction \(dir)" )
         }
-        let xOld = xPos, yOld = yPos
+        var path : [Coordinate]
         switch orientation {
-        case 1: // North
-            yPos += len
-        case 2: // East
-            xPos += len
-        case 3: // South
-            yPos -= len
-        case 4: // West
-            xPos -= len
+        case 0: // North
+            path = pos.walkNorth( len )
+        case 1: // East
+            path = pos.walkEast( len )
+        case 2: // South
+            path = pos.walkSouth( len )
+        case 3: // West
+            path = pos.walkWest( len )
         default:              
-            break
+            preconditionFailure( "Bad orientation \(orientation)" )
         }
-        assert( xOld != xPos || yOld != yPos || len == 0 )
-        visited.insert( (xPos, yPos ) )
+        assert( path.count == len )
+        for newPos in path {
+            assert( newPos != pos )
+            if visited.contains( newPos ) {
+                print( "Revisiting \(newPos.x) \(newPos.y)" )
+                if firstTwice == nil {
+                    firstTwice = newPos
+                }
+            } else {
+                visited.insert( newPos )
+            }
+            pos = newPos
+        }
     }
-    return ( xPos, yPos )
+    return ( pos, firstTwice )
 }
 
 func main() throws {
@@ -59,10 +69,13 @@ func main() throws {
         let inputFn = CommandLine.arguments[1]
         let input = try readStringFromFile( path:inputFn )
         let steps = parse( problem: input )
-        let ( xPos, yPos ) = walk( steps: steps )
-        print( "Final position (\(xPos),\(yPos))" )
-        let distance = abs( xPos ) + abs( yPos )
-        print( "Distance \(distance)" )
+        let (pos, goal) = walk( steps: steps )
+        print( "Final position \(pos.x),\(pos.x)" )
+        print( "Distance \(pos.blockDistance)" )
+        if let goalCoord = goal {
+             print( "Goal coordinates \(goalCoord.x),\(goalCoord.y)" )
+             print( "Distance \(goalCoord.blockDistance)" )
+        }
     } catch FileReadError.FileNotFound {
         print( "File not found." )
     } catch {
