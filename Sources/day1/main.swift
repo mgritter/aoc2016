@@ -1,5 +1,6 @@
 import Foundation
-
+import SimpleFile
+  
 func parse( problem : String ) -> [(String,Int)] {
     let raw = problem.components( separatedBy: ", " )
     let out = raw.map( { (token) -> (String,Int) in

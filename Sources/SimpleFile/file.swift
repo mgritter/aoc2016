@@ -7,11 +7,11 @@
     import Darwin
 #endif
 
-enum FileReadError : Error {
+public enum FileReadError : Error {
     case FileNotFound
 }
 
-func readStringFromFile(path: String) throws -> String {
+public func readStringFromFile(path: String) throws -> String {
     let fp = fopen(path, "r")
     if fp == nil {
         throw FileReadError.FileNotFound
