@@ -5,7 +5,7 @@ func splitLines( _ input : String ) -> [String] {
     return input.components( separatedBy: "\n" )
 }
 
-func walk( directions : String, start : BoundedCoordinate ) -> BoundedCoordinate {
+func walk( directions : String, start : KeypadCoordinate ) -> KeypadCoordinate {
     var pos = start
     for d in directions.characters {
         switch d {
@@ -31,8 +31,14 @@ func main() {
         let input = try readStringFromFile( path:inputFn )
         let lines = splitLines( input )
 
+        /*
+        createStandardDigits()
+        var pos = KeypadCoordinate( x:1, y:1 )
+        */
+        createPart2Digits()
+        var pos = KeypadCoordinate( x:0, y:2 )
+        
         var code = ""
-        var pos = BoundedCoordinate( x:1, y:1 )
         for l in lines {
             // Fix badly copied input
             if l == "" {
@@ -41,7 +47,7 @@ func main() {
             
             print( "line: '\(l)'" )
             pos = walk( directions:l, start:pos )
-            code += pos.keypadDigit
+            code += pos.keypadDigit!
         }
 
         print( code )

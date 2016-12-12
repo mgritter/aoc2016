@@ -1,64 +1,79 @@
 
-let xBound = 2
-let yBound = 2
-
-struct BoundedCoordinate {    
+struct KeypadCoordinate : Hashable {    
     let x : Int
     let y : Int
 
-    func left() -> BoundedCoordinate {
-        if x > 0 {
-             return BoundedCoordinate( x : x - 1, y : y )
-        } else {
-            return self
-        }
-    }
-
-    func right() -> BoundedCoordinate {
-        if x < xBound {
-             return BoundedCoordinate( x : x + 1, y : y )
-        } else {
-            return self
-        }
-    }
-
-    func up() -> BoundedCoordinate {
-        if y > 0 {
-             return BoundedCoordinate( x : x, y : y - 1 )
-        } else {
-            return self
-        }
-        
-    }
-
-    func down() -> BoundedCoordinate {
-        if y < yBound {
-             return BoundedCoordinate( x : x, y : y + 1 )
-        } else {
-            return self
-        }
-    }
-
-    var keypadDigit : String {
+    var hashValue : Int {
         get {
-            switch (x,y) {
-            case (0,0): return "1"
-            case (1,0): return "2"
-            case (2,0): return "3"
-            case (0,1): return "4"
-            case (1,1): return "5"
-            case (2,1): return "6"
-            case (0,2): return "7"
-            case (1,2): return "8"
-            case (2,2): return "9"
-            default:
-                preconditionFailure( "Bad coordinate \(x),\(y)" )
-            }
+            return x ^ y
         }
     }
 }
 
+var digits = [ KeypadCoordinate : String ]()
 
-func ==(left: BoundedCoordinate, right: BoundedCoordinate) -> Bool {
+func createDigit( _ x : Int, _ y : Int, _ k : String ) {
+    digits[ KeypadCoordinate( x: x, y : y ) ] = k
+}
+
+func createStandardDigits() {
+    createDigit( 0, 0, "1" )
+    createDigit( 1, 0, "2" )
+    createDigit( 2, 0, "3" )
+    createDigit( 0, 1, "4" )
+    createDigit( 1, 1, "5" )
+    createDigit( 2, 1, "6" )
+    createDigit( 0, 2, "7" )
+    createDigit( 1, 2, "8" )
+    createDigit( 2, 2, "9" )
+}
+
+func createPart2Digits() {
+    createDigit( 2, 0, "1" )
+    createDigit( 1, 1, "2" )
+    createDigit( 2, 1, "3" )
+    createDigit( 3, 1, "4" )
+    createDigit( 0, 2, "5" )
+    createDigit( 1, 2, "6" )
+    createDigit( 2, 2, "7" )
+    createDigit( 3, 2, "8" )
+    createDigit( 4, 2, "9" )
+    createDigit( 1, 3, "A" )
+    createDigit( 2, 3, "B" )
+    createDigit( 3, 3, "C" )
+    createDigit( 2, 4, "D" )
+}
+
+extension KeypadCoordinate {
+    func left() -> KeypadCoordinate {
+        return check( KeypadCoordinate( x : x-1, y : y ) )
+    }
+
+    func right() -> KeypadCoordinate {
+        return check( KeypadCoordinate( x : x+1, y : y ) )
+    }
+
+    func up() -> KeypadCoordinate {
+        return check( KeypadCoordinate( x : x, y : y-1 ) )
+    }
+
+    func down() -> KeypadCoordinate {
+        return check( KeypadCoordinate( x : x, y : y+1 ) )
+    }
+
+    var keypadDigit : String? {
+        return digits[ self ]
+    }
+
+    func check( _ candidate: KeypadCoordinate ) -> KeypadCoordinate {
+        if candidate.keypadDigit == nil {
+            return self
+        } else {
+            return candidate
+        }
+    }
+}
+
+func ==(left: KeypadCoordinate, right: KeypadCoordinate) -> Bool {
     return left.x == right.x && left.y == right.y
 }
