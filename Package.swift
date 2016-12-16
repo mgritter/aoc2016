@@ -5,6 +5,7 @@ let package = Package(
   targets: [
     Target( name: "AocMain", dependencies: ["SimpleFile"] ),
     Target( name: "day1", dependencies: [ "AocMain" ] ),
-    Target( name: "day2", dependencies: [ "AocMain" ] )
+    Target( name: "day2", dependencies: [ "AocMain" ] ),
+    Target( name: "day3", dependencies: [ "AocMain" ] )
   ]
 )
