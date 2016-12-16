@@ -1,5 +1,5 @@
 import Foundation
-import SimpleFile
+import AocMain
   
 func parse( problem : String ) -> [(String,Int)] {
     let raw = problem.components( separatedBy: ", " )
@@ -61,28 +61,16 @@ func walk( steps: [(String,Int)] ) -> (Coordinate, Coordinate?) {
     return ( pos, firstTwice )
 }
 
-func main() {
-    do {
-        guard CommandLine.argc == 2 else {
-            print( "Specify the input file on the command line." )
-            return
-        }
-        let inputFn = CommandLine.arguments[1]
-        let input = try readStringFromFile( path:inputFn )
-        let steps = parse( problem: input )
-        let (pos, goal) = walk( steps: steps )
-        print( "Final position \(pos.x),\(pos.x)" )
-        print( "Distance \(pos.blockDistance)" )
-        if let goalCoord = goal {
-             print( "Goal coordinates \(goalCoord.x),\(goalCoord.y)" )
-             print( "Distance \(goalCoord.blockDistance)" )
-        }
-    } catch FileReadError.FileNotFound {
-        print( "File not found." )
-    } catch {
-        print( "Some other error." )
+func problem( input : String ) {
+    let steps = parse( problem: input )
+    let (pos, goal) = walk( steps: steps )
+    print( "Final position \(pos.x),\(pos.x)" )
+    print( "Distance \(pos.blockDistance)" )
+    if let goalCoord = goal {
+        print( "Goal coordinates \(goalCoord.x),\(goalCoord.y)" )
+        print( "Distance \(goalCoord.blockDistance)" )
     }
 }
 
-main()
+main( problem )
 

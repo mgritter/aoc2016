@@ -3,7 +3,8 @@ import PackageDescription
 let package = Package(
   name: "aoc2016",
   targets: [
-    Target( name: "day1", dependencies: [ "SimpleFile" ] ),
-    Target( name: "day2", dependencies: [ "SimpleFile" ] )
+    Target( name: "AocMain", dependencies: ["SimpleFile"] ),
+    Target( name: "day1", dependencies: [ "AocMain" ] ),
+    Target( name: "day2", dependencies: [ "AocMain" ] )
   ]
 )

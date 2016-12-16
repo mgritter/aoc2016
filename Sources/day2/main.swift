@@ -1,5 +1,5 @@
 import Foundation
-import SimpleFile
+import AocMain
 
 func splitLines( _ input : String ) -> [String] {
     return input.components( separatedBy: "\n" )
@@ -21,42 +21,30 @@ func walk( directions : String, start : KeypadCoordinate ) -> KeypadCoordinate {
     return pos
 }
 
-func main() {
-    do {
-        guard CommandLine.argc == 2 else {
-            print( "Specify the input file on the command line." )
-            return
+func problem( input : String ) {
+    let lines = splitLines( input )
+    
+    /*
+     createStandardDigits()
+     var pos = KeypadCoordinate( x:1, y:1 )
+     */
+    createPart2Digits()
+    var pos = KeypadCoordinate( x:0, y:2 )
+    
+    var code = ""
+    for l in lines {
+        // Fix badly copied input
+        if l == "" {
+            break
         }
-        let inputFn = CommandLine.arguments[1]
-        let input = try readStringFromFile( path:inputFn )
-        let lines = splitLines( input )
-
-        /*
-        createStandardDigits()
-        var pos = KeypadCoordinate( x:1, y:1 )
-        */
-        createPart2Digits()
-        var pos = KeypadCoordinate( x:0, y:2 )
         
-        var code = ""
-        for l in lines {
-            // Fix badly copied input
-            if l == "" {
-                break
-            }
-            
-            print( "line: '\(l)'" )
-            pos = walk( directions:l, start:pos )
-            code += pos.keypadDigit!
-        }
-
-        print( code )
-    } catch FileReadError.FileNotFound {
-        print( "File not found." )
-    } catch {
-        print( "Some other error." )
+        print( "line: '\(l)'" )
+        pos = walk( directions:l, start:pos )
+        code += pos.keypadDigit!
     }
+    
+    print( code )
 }
 
-main()
+main( problem )
 
