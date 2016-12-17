@@ -36,12 +36,11 @@ func problem( input : String ) {
         if line == "" {
             continue;
         }
-        let chars = Array( line.characters )
-        for _ in columns.count..<chars.count {
-            columns.append( MaxCollection() )
-        }                          
-        for i in 0..<chars.count {
-            columns[i].add( character:chars[i] )
+        for ( i, c ) in zip( 0...Int.max, line.characters ) {
+            if columns.count <= i {
+                columns.append( MaxCollection() )
+            }
+            columns[i].add( character:c )
         }
     }
 
