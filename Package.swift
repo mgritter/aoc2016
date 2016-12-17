@@ -8,7 +8,8 @@ let package = Package(
     Target( name: "day2", dependencies: [ "AocMain" ] ),
     Target( name: "day3", dependencies: [ "AocMain" ] ),
     Target( name: "day4", dependencies: [ "AocMain" ] ),
-    Target( name: "day5", dependencies: [ "AocMain" ] )
+    Target( name: "day5", dependencies: [] ),
+    Target( name: "day6", dependencies: [ "AocMain" ] )
   ],
   dependencies: [
     .Package( url: "https://github.com/krzyzanowskim/CryptoSwift.git",
