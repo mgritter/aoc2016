@@ -6,7 +6,12 @@ let package = Package(
     Target( name: "AocMain", dependencies: ["SimpleFile"] ),
     Target( name: "day1", dependencies: [ "AocMain" ] ),
     Target( name: "day2", dependencies: [ "AocMain" ] ),
+    Target( name: "day3", dependencies: [ "AocMain" ] ),
     Target( name: "day4", dependencies: [ "AocMain" ] ),
-    Target( name: "day3", dependencies: [ "AocMain" ] )
+    Target( name: "day5", dependencies: [ "AocMain" ] )
+  ],
+  dependencies: [
+    .Package( url: "https://github.com/krzyzanowskim/CryptoSwift.git",
+              majorVersion: 0 )
   ]
 )
