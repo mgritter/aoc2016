@@ -2,17 +2,15 @@ import AocMain
 import Foundation
 
 class ParserOutput {
-    var out : String = ""
+    var length : Int = 0
 
     func append( _ c : Character ) {
-        out.append( c )
+        length += 1
     }
 
-    func appendCopy( of repeated : String,
+    func appendCopy( length : Int,
                      numCopies : Int ) {
-        for _ in 1...numCopies {
-            out += repeated
-        }
+        self.length += length * numCopies
     }
 }
 
@@ -37,7 +35,6 @@ protocol ParserState {
     func visit( input : Character,
                 output : ParserOutput ) -> ParserState
 
-    func finish( output : ParserOutput )
 }
 
 // The initial, default state that just copies characters
@@ -76,9 +73,6 @@ class CommandState : ParserState {
             return self
         }
     }
-
-    func finish( output : ParserOutput ) {
-    }
 }
 
 // Parsing a command until the ')'
@@ -109,9 +103,6 @@ class CommandState2 : ParserState {
             return self
         }
     }
-
-    func finish( output : ParserOutput ) {
-    }
 }
 
 // Reading the argument of a copy command, a fixed number
@@ -137,7 +128,8 @@ class ArgumentState : ParserState {
             length -= 1
             if length == 0 {
                 print( "\(numCopies) copies of '\(argument)'" )
-                output.appendCopy( of:argument,
+                let dl = decompressedLength( input: argument );
+                output.appendCopy( length:dl,
                                    numCopies:numCopies )
                 return CopyState()
             } else {
@@ -145,28 +137,21 @@ class ArgumentState : ParserState {
             }
         }
     }
-
-    func finish( output : ParserOutput ) {
-        print( "\(numCopies) copies of '\(argument)'" )
-        output.appendCopy( of:argument, numCopies:numCopies )
-    }
-
 }
 
-
-func problem( input : String ) {
+func decompressedLength( input : String ) -> Int {
     var p : ParserState = CopyState()
     let o = ParserOutput()
-    var count = 0
     for c in input.characters {
         p = p.visit( input:c, output:o )
-        count += 1
     }
-    p.finish( output:o )
-    
-    print( "Input length: \(count)" )
-    print( "Result: '\(o.out)'" )
-    print( "Length: \(o.out.characters.count)" )
+    return o.length
+}
+
+func problem( input : String ) {
+    let l = decompressedLength( input:input )
+    print( "Input length: \(input.characters.count)" )
+    print( "Result: '\(l)'" )
 }
 
 main( problem )
