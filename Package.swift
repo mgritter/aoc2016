@@ -13,10 +13,13 @@ let package = Package(
     Target( name: "day7", dependencies: [ "AocMain" ] ),
     Target( name: "day8", dependencies: [ "AocMain" ] ),
     Target( name: "day9", dependencies: [ "AocMain" ] ),
-    Target( name: "day10", dependencies: [ "AocMain" ] )
+    Target( name: "day10", dependencies: [ "AocMain" ] ),
+    Target( name: "day11", dependencies: [] ),
   ],
   dependencies: [
     .Package( url: "https://github.com/krzyzanowskim/CryptoSwift.git",
-              majorVersion: 0 )
+              majorVersion: 0 ),
+    .Package( url: "https://github.com/davecom/SwiftPriorityQueue.git",
+              majorVersion: 1 )
   ]
 )
