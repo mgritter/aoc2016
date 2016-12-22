@@ -11,15 +11,7 @@ The fourth floor contains nothing relevant.
 */
 
 let numFloors = 4
-let numElements = 5
-
-enum Elements : Int {
-    case thulium = 0
-    case plutonium = 1
-    case strontium = 2
-    case promethium = 3
-    case ruthenium = 4
-}
+let numElements = 7
 
 enum ObjectType {
     case generator
@@ -68,8 +60,9 @@ struct ProblemState : Comparable {
     }
 
     var isGoal : Bool {
-        return generatorFloors == [ 4, 4, 4, 4, 4 ] &&
-          microchipFloors == [ 4, 4, 4, 4, 4 ] &&
+        let all4 = [Int]( repeating:4, count:numElements )
+        return generatorFloors == all4 &&
+          microchipFloors == all4 &&
           elevator == 4
     }
 
@@ -138,22 +131,27 @@ struct ProblemState : Comparable {
 }
 
 struct KeyVec : Hashable {
-    var key : [Int]
-    
+    var elevator : Int
+    var floors : [(Int,Int)]
+
     public var hashValue : Int {
-        var h : Int = 0
-        for i in key  {
-            h = h &* 17 &+ i 
+        var h : Int = elevator
+        for (a,b) in floors {
+            h = h &* 17 &+ a
+            h = h &* 17 &+ b
         }
         return h
     }
 
     public static func ==( lhs : KeyVec, rhs: KeyVec ) -> Bool {
-        guard lhs.key.count == rhs.key.count else {
+        if lhs.elevator != rhs.elevator {
             return false
         }
-        for i in 0..<lhs.key.count {
-            if lhs.key[i] != rhs.key[i] {
+        guard lhs.floors.count == rhs.floors.count else {
+            return false
+        }
+        for i in 0..<lhs.floors.count {
+            if lhs.floors[i] != rhs.floors[i] {
                 return false
             }
         }
@@ -163,16 +161,21 @@ struct KeyVec : Hashable {
 
 extension ProblemState {
     var key : KeyVec {
-        return KeyVec( key: generatorFloors + microchipFloors + [ elevator ] )
+        var floorPairs = (0..<numElements).map { (generatorFloors[$0], microchipFloors[$0] ) }
+        floorPairs.sort(by:<)
+        return KeyVec( elevator : elevator,
+                       floors : floorPairs )
     }
 }
-    
+
+// You can use '4, 4' as the initial floors for the last
+// two elements to get the day 1 solution
 let startState = ProblemState(
   // thulium on first, plutonium on first, strontium on first
   // prothemium on third, ruthenium on third
-  generatorFloors: [ 1, 1, 1, 3, 3 ],
+  generatorFloors: [ 1, 1, 1, 3, 3, 1, 1 ],
   // plutonium and strontium are on the second floor instead
-  microchipFloors: [ 1, 2, 2, 3, 3 ],
+  microchipFloors: [ 1, 2, 2, 3, 3, 1, 1 ],
   elevator : 1,
   moves : 0 ) 
 
@@ -194,11 +197,11 @@ while !pq.isEmpty {
         }
         s.successorStates.forEach {
             if !visited.contains( $0.key ) {
-                // print( "New state \($0) \($0.key)" )
+                //print( "New state \($0) \($0.key)" )
                 visited.insert( $0.key )
                 pq.push( $0 )
             } else {
-                // print( "Already visited \($0) \($0.key)" )
+                //print( "Already visited \($0) \($0.key)" )
             }
         }
     }
