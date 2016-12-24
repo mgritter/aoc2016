@@ -57,8 +57,11 @@ class ProgramState : CustomStringConvertible {
         return "pc=\(programCounter) reg=\(registers)"
     }
 
-    func execute() {        
-        // Optimized multiply
+    func execute() {
+        // This is gross, but I'm not up for figuring it out in any more
+        // detail, and the checks make sure the program is still correct.
+        // 
+        // Optimized multiply and add
         if programCounter == 4 &&
              program[programCounter] == Instruction.cpy( src:"b", dst:"c" ) &&
              program[programCounter + 1] == Instruction.inc( reg:"a" ) &&
