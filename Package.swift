@@ -15,6 +15,7 @@ let package = Package(
     Target( name: "day10", dependencies: [ "AocMain" ] ),
     Target( name: "day12", dependencies: [ "AocMain" ] ),
     Target( name: "day12", dependencies: [ "AocMain" ] ),
+    Target( name: "day20", dependencies: [ "AocMain" ] ),
     Target( name: "day23", dependencies: [ "AocMain" ] ),
     Target( name: "day24", dependencies: [ "AocMain" ] )
   ],
